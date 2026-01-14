@@ -2,6 +2,8 @@ import { networkInterfaces } from "node:os"
 import { Prisma } from "../../generated/prisma/client"
 import { Role } from "../../generated/prisma/enums"
 import {prisma} from "../../lib/prisma"
+import { deletePost } from "../controller/postController"
+import { deleteComments } from "../controller/commentController"
 
 class User{
     async createUser(email: string, password: string){
@@ -21,7 +23,8 @@ class User{
             },
             select:{
                 id: true,
-                email: true
+                email: true,
+                role: true
             }
         })
         return user
@@ -35,7 +38,7 @@ class User{
             select: {
                 email: true,
                 password: true,
-                id: true
+                id: true,
             }
         })
         return user
@@ -54,12 +57,34 @@ class Blog{
         })
     }
 
-    async findAllPost(){
+    async editPost(postId: number, title: string, text: string, published: boolean){
+        await prisma.posts.update({
+            where:{
+                id:postId
+            },
+            data:{
+                title: title,
+                text: text,
+                published: published
+            }
+        })
+    }
+
+    async deletePost(postId: number){
+        await prisma.posts.delete({
+            where:{
+                id:postId
+            }
+        })
+    }
+
+    async findAllPost(userId?: number){
         const posts = await prisma.posts.findMany({
             where:{
                 users:{
-                    email: "triphu27@gmail.com"
-                }
+                    role: Role.ADMIN,
+                },
+                ...(userId !== undefined && { userId }),
             },
             select: {
                 title: true,
@@ -93,6 +118,37 @@ class Comments{
             }
         })
         return comments
+    }
+
+    async createComments(postId: number, 
+        userId: number,
+        text: string){
+        await prisma.comments.create({
+            data:{
+                postId:postId,
+                userId:userId,
+                text:text
+            }
+        })
+    }
+
+    async updateComments(id: number, text: string){
+        await prisma.comments.update({
+            where:{
+                id: id
+            },
+            data:{
+                text:text
+            }
+        })
+    }
+
+    async deleteComments(id: number){
+        await prisma.comments.delete({
+            where:{
+                id:id
+            }
+        })
     }
 }
 
