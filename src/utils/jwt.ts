@@ -9,7 +9,6 @@ const opts: StrategyOptions = {
 
 export const jwtSub = new JwtStrategy(opts, async (jwt_payload, done) => {
     try{
-        console.log(jwt_payload)
         const user = await userObj.findUserById(jwt_payload.sub)
         if (!user){
             return done(null, false)
