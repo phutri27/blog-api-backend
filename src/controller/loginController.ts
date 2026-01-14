@@ -15,7 +15,6 @@ export const loginPost = async (req: Request, res: Response) => {
             }
             const secret = process.env.SECRET_KEY as string
             const token = jwt.sign({sub: user.id}, secret, opts)
-            localStorage.setItem("token", JSON.stringify(token))
             return res.status(200).json({
                 message: "Authenticated",
                 token
