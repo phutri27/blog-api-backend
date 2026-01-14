@@ -42,15 +42,7 @@ class User{
     }
 }
 
-interface Posts{
-    title: string
-    text: string
-    date: object
-    users: object
-}
-
 class Blog{
-
     async createPost(userId: number, title: string, text: string, published: boolean): Promise<void>{
         await prisma.posts.create({
             data:{
@@ -62,9 +54,7 @@ class Blog{
         })
     }
 
-
-    
-    async findAllPost(): Promise<Posts[]>{
+    async findAllPost(){
         const posts = await prisma.posts.findMany({
             where:{
                 users:{
@@ -86,6 +76,26 @@ class Blog{
     }
 }
 
+class Comments{
+    async findAllComments(postId: number){
+        const comments = await prisma.comments.findMany({
+            where:{
+                postId: postId
+            },
+            select:{
+                text: true,
+                date: true,
+                user:{
+                    select:{
+                        email:true
+                    }
+                }
+            }
+        })
+        return comments
+    }
+}
+
 export const blogObj = new Blog()
 export const userObj = new User()
-
+export const commnentObj = new Comments()

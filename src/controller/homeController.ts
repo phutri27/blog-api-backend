@@ -1,14 +1,17 @@
 import { Request, Response } from "express";
 import { matchedData, validationResult } from "express-validator";
-import { blogObj } from "../queries/queries";
+import { blogObj, commnentObj } from "../queries/queries";
 import { validateBlogPublish } from "./validator/validator";
 
 export const renderHomePage = async (req: Request, res: Response) => {
-    if (!req.user){
-        throw new Error("Unauthorized")
-    }
     const posts = await blogObj.findAllPost()
     return res.status(200).json(posts) 
+}
+
+export const renderComments = async (req: Request, res: Response) => {
+    const id = Number(req.params.id)
+    const comments = await commnentObj.findAllComments(id)
+    return res.status(200).json(comments)
 }
 
 export const blogPost = [
