@@ -6,6 +6,7 @@ import "dotenv/config"
 import routes from "./routes/index"
 import "dotenv/config"
 import { jwtSub } from "./utils/jwt"
+import { isLogged, isAdmin } from "./utils/isAuth"
 
 passport.use(jwtSub)
 
@@ -17,15 +18,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize())  
 
-
 app.use((req: Request , res: Response, next: NextFunction) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   next();
 });
 
-app.use("/", routes.login)
-app.use("/signup", routes.signup)
+app.use("/", isLogged, routes.login)
+app.use("/signup", isLogged, routes.signup)
 app.use("/home", passport.authenticate('jwt', {session: false}), routes.home)
+app.use("/comments", passport.authenticate('jwt', {session: false}), routes.comments)
+app.use("/posts", passport.authenticate('jwt', {session: false}), isAdmin, routes.posts)
 
 app.listen(3000, () => {
   console.log(`Server running on http://localhost:${3000}`);

@@ -1,11 +1,7 @@
 import express from "express"
-import { renderHomePage, blogPost, renderComments } from "../controller/homeController"
-
+import { renderPosts } from "../controller/postController"
 const router = express.Router()
 
-router.get("/", renderHomePage)
-router.post("/blog", blogPost)
-
-router.get("/posts/:id", renderComments)
+router.get("/", renderPosts)
 
 export default router
