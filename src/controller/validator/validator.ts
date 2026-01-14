@@ -30,3 +30,8 @@ export const validateBlogPublish = [
     body("content").trim()
     .notEmpty().withMessage(`Blog content ${emptyMsg}`)
 ]
+
+export const validateComments = [
+    body("content").trim()
+    .notEmpty().withMessage(`Blog content ${emptyMsg}`)
+]
