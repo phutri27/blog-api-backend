@@ -22,7 +22,7 @@ model User{
   comments  Comments[]
 }
 
-model Comments{
+model Comments{ 
   id        Int       @id @default(autoincrement())
   text      String    @db.VarChar(255)
   date      DateTime  @default(now())
