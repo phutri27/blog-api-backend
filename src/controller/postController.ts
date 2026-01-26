@@ -4,16 +4,16 @@ import { blogObj } from "../queries/queries";
 import { validateBlogPublish } from "./validator/validator";
 
 export const renderPosts = async (req: Request, res: Response) => {
-    let posts
-    if (req.baseUrl == "/home") {
-        posts = await blogObj.findAllPost()
-    } else {
-        if (!req.user) {
-            return res.status(401).json({ message: "Unauthorized" })
-        }
-        posts = await blogObj.findAllPost(req.user.id) 
-    }
+    const posts = await blogObj.findAllPost()
     return res.status(200).json(posts) 
+}
+
+export const renderMyPost = async (req: Request, res: Response) => {
+    if (!req.user){
+        throw new Error("Unauthorized")
+    }
+    const posts = await blogObj.findAllPost(req.user.id)
+    return res.status(200).json(posts)
 }
 
 export const blogPost = [
