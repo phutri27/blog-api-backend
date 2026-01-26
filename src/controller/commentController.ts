@@ -22,10 +22,10 @@ export const createComments = [...validateComments,
         if (req.method == 'POST'){
             const postId = Number(req.params.postId)
             const userId = Number(req.user?.id)
-            const result = await commnentObj.createComments(postId, userId, content)
+            result = await commnentObj.createComments(postId, userId, content)
         } else{
             const cmtId = Number(req.params.id)
-            result =await commnentObj.updateComments(cmtId, content)
+            result = await commnentObj.updateComments(cmtId, content)
         }
         return res.status(200).json(result)
     }
