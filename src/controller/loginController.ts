@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"
 
 export const loginPost = async (req: Request, res: Response) => {
     const {email, password} = req.body
+
     const user = await userObj.findUserByEmail(email)
     if (user) {
         const isMatch = await bcrypt.compare(password, user.password)
