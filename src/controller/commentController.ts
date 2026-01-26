@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { matchedData, validationResult } from "express-validator";
+import { matchedData, validationResult, Result } from "express-validator";
 import { commnentObj } from "../queries/queries";
 import { validateComments } from "./validator/validator";
 import { prisma } from "../../lib/prisma";
@@ -12,22 +12,22 @@ export const renderComments = async (req: Request, res: Response) => {
 
 export const createComments = [...validateComments,
     async (req: Request, res: Response) => {
-        const errors = validationResult(req)
+        const errors: Result = validationResult(req)
         if (!errors.isEmpty()){
-            return res.status(400).json({errors: errors.array()})
+            const result: Result<string> = errors.formatWith(error => error.msg as string)
+            return res.status(400).json({errors: result.array()})
         }
         const {content} = matchedData(req)
+        let result
         if (req.method == 'POST'){
             const postId = Number(req.params.postId)
-            const userId = Number(req.params.userId)
-            await commnentObj.createComments(postId, userId, content)
+            const userId = Number(req.user?.id)
+            const result = await commnentObj.createComments(postId, userId, content)
         } else{
             const cmtId = Number(req.params.id)
-            await commnentObj.updateComments(cmtId, content)
+            result =await commnentObj.updateComments(cmtId, content)
         }
-        return res.status(200).json({
-            message: "Create comment successfully"
-        })
+        return res.status(200).json(result)
     }
 ]
 

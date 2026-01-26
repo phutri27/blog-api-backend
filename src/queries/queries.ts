@@ -85,8 +85,10 @@ class Blog{
                     role: Role.ADMIN,
                 },
                 ...(userId !== undefined && { userId }),
+                published: true
             },
             select: {
+                id: true,
                 title: true,
                 text: true,
                 date: true,
@@ -108,6 +110,7 @@ class Comments{
                 postId: postId
             },
             select:{
+                id: true,
                 text: true,
                 date: true,
                 user:{
@@ -123,24 +126,42 @@ class Comments{
     async createComments(postId: number, 
         userId: number,
         text: string){
-        await prisma.comments.create({
+        const result = await prisma.comments.create({
             data:{
                 postId:postId,
                 userId:userId,
                 text:text
+            },
+            select:{
+                id:true,
+                text: true,
+                date: true,
+                user:{
+                    select:{ email: true}
+                }
             }
         })
+        return result
     }
 
     async updateComments(id: number, text: string){
-        await prisma.comments.update({
+        const result = await prisma.comments.update({
             where:{
                 id: id
             },
             data:{
                 text:text
+            },
+            select:{
+                id: true,
+                text: true,
+                date: true,
+                user:{
+                    select: {email: true}
+                }
             }
         })
+        return result
     }
 
     async deleteComments(id: number){
