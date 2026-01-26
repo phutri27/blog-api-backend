@@ -12,7 +12,7 @@ export const validateSignUp = [
     .isLength({min: 8}).withMessage("Password must be at least 8 character")
     .isLength({max: 25}).withMessage("Password must not exceed 25 characters"),
 
-    body("confirm").trim()
+    body("confirmPass").trim()
     .notEmpty().withMessage(`Password ${emptyMsg}`)
     .custom((value: string, {req}) => {
         if(value !== req.body.password){
@@ -33,5 +33,5 @@ export const validateBlogPublish = [
 
 export const validateComments = [
     body("content").trim()
-    .notEmpty().withMessage(`Blog content ${emptyMsg}`)
+    .notEmpty().withMessage(`Comment content ${emptyMsg}`)
 ]
