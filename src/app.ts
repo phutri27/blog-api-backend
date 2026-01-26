@@ -7,11 +7,12 @@ import routes from "./routes/index"
 import "dotenv/config"
 import { jwtSub } from "./utils/jwt"
 import { isLogged, isAdmin } from "./utils/isAuth"
-
+import cors from "cors"
 passport.use(jwtSub)
 
 const app = express()
 const assetsPath = path.join(__dirname, "public")
+app.use(cors())
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: true }));
