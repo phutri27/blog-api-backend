@@ -3,6 +3,7 @@ import { renderComments, createComments, deleteComments } from "../controller/co
 const router = express.Router()
 
 router.get("/:id", renderComments)
+
 router.post("/:postId", createComments)
 router.put("/:id", createComments)
 router.delete("/:id", deleteComments)
