@@ -3,6 +3,6 @@ import { loginPost } from "../controller/loginController"
 
 const router = express.Router()
 
-router.post("/login", loginPost)
+router.post("/", loginPost)
 
 export default router

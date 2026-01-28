@@ -18,7 +18,8 @@ export const loginPost = async (req: Request, res: Response) => {
             const token = jwt.sign({sub: user.id}, secret, opts)
             return res.status(200).json({
                 message: "Authenticated",
-                token
+                token,
+                userId: user.id
             })
         }
     }
