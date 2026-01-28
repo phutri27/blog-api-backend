@@ -109,13 +109,17 @@ class Comments{
             where:{
                 postId: postId
             },
+            orderBy:{
+                date: "asc"
+            },
             select:{
                 id: true,
                 text: true,
                 date: true,
                 user:{
                     select:{
-                        email:true
+                        email:true,
+                        id: true
                     }
                 }
             }
@@ -137,7 +141,7 @@ class Comments{
                 text: true,
                 date: true,
                 user:{
-                    select:{ email: true}
+                    select:{ email: true, id: true}
                 }
             }
         })
@@ -157,7 +161,10 @@ class Comments{
                 text: true,
                 date: true,
                 user:{
-                    select: {email: true}
+                    select: {
+                        email: true,
+                        id: true
+                    }
                 }
             }
         })
@@ -165,11 +172,46 @@ class Comments{
     }
 
     async deleteComments(id: number){
-        await prisma.comments.delete({
+        const result = await prisma.comments.delete({
             where:{
                 id:id
             }
         })
+        return result
+    }
+
+    async findSelfComments(id: number) {
+        const result = await prisma.comments.findMany({
+            where:{
+                userId: id
+            },
+            orderBy:{
+                date: "desc"
+            },
+            select:{
+                id: true,
+                text: true,
+                date: true,
+                postId: true,
+                user:{
+                    select:{
+                        email: true
+                    }
+                },
+                posts: {
+                    select: {
+                        title: true,
+                        users: {
+                            select: {
+                                email: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        
+        return result
     }
 }
 

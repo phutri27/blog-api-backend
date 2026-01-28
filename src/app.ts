@@ -24,11 +24,13 @@ app.use((req: Request , res: Response, next: NextFunction) => {
   next();
 });
 
-app.use("/", isLogged, routes.login)
+app.use("/", isLogged, routes.defaultRoute)
+app.use("/login", isLogged, routes.login)
 app.use("/signup", isLogged, routes.signup)
 app.use("/home", passport.authenticate('jwt', {session: false}), routes.home)
 app.use("/comments", passport.authenticate('jwt', {session: false}), routes.comments)
 app.use("/posts", passport.authenticate('jwt', {session: false}), isAdmin, routes.posts)
+app.use("/profile", passport.authenticate('jwt', {session: false}), routes.profile)
 
 app.listen(3000, () => {
   console.log(`Server running on http://localhost:${3000}`);

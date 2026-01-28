@@ -18,12 +18,16 @@ export const createComments = [...validateComments,
             return res.status(400).json({errors: result.array()})
         }
         const {content} = matchedData(req)
+        const { userId } = req.body
         let result
         if (req.method == 'POST'){
             const postId = Number(req.params.postId)
             const userId = Number(req.user?.id)
             result = await commnentObj.createComments(postId, userId, content)
         } else{
+            if (req.user?.id != userId){
+                return res.status(400).json("Unauthorized for this action")
+            }
             const cmtId = Number(req.params.id)
             result = await commnentObj.updateComments(cmtId, content)
         }
@@ -31,10 +35,18 @@ export const createComments = [...validateComments,
     }
 ]
 
+export const selfComments = async (req: Request, res: Response) => {
+    const userId = Number(req.user?.id)
+    const result = await commnentObj.findSelfComments(userId)
+    return res.status(200).json(result)
+}
+
 export const deleteComments = async (req: Request, res: Response) => {
     const id = Number(req.params.id)
-    await commnentObj.deleteComments(id)
-    return res.status(200).json({
-        message: "Delete comment successfully"
-    })
+    const { userId } = req.body
+    if (req.user?.id != userId){
+        return res.status(400).json("Unathorized for this action")
+    }
+    const result = await commnentObj.deleteComments(id)
+    return res.status(200).json(result)
 }
