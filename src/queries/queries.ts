@@ -33,7 +33,22 @@ class User{
     async findUserByEmail(email: string) {
         const user = await prisma.user.findUnique({
             where: {
-                email: email
+                email: email,
+            },
+            select: {
+                email: true,
+                password: true,
+                id: true,
+            }
+        })
+        return user
+    }
+
+    async findUserByEmailAdmin(email: string) {
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email,
+                role: Role.ADMIN
             },
             select: {
                 email: true,
