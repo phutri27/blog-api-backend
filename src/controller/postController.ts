@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { matchedData, validationResult } from "express-validator";
+import { matchedData, validationResult, Result } from "express-validator";
 import { blogObj } from "../queries/queries";
 import { validateBlogPublish } from "./validator/validator";
 
 export const renderPosts = async (req: Request, res: Response) => {
-    const posts = await blogObj.findAllPost()
+    const posts = await blogObj.findAllPost(true)
     return res.status(200).json(posts) 
 }
 
@@ -12,18 +12,20 @@ export const renderMyPost = async (req: Request, res: Response) => {
     if (!req.user){
         throw new Error("Unauthorized")
     }
-    const posts = await blogObj.findAllPost(req.user.id)
+    const posts = await blogObj.findAllPost(undefined,req.user.id)
     return res.status(200).json(posts)
 }
 
 export const blogPost = [
     ...validateBlogPublish,
     async (req: Request , res: Response ) => {
-        const errors = validationResult(req)
+        const errors: Result = validationResult(req)
         if (!errors.isEmpty()){
-            return res.status(400).json({errors: errors.array()})
+            const result: Result<string> = errors.formatWith(error => error.msg as string)
+            return res.status(400).json({errors: result.array()})
         }
-        const {title, content, published} = matchedData(req)
+        const {title, content} = matchedData(req)
+        const {published} = req.body
         if (req.method == 'PUT'){
             const id = Number(req.params.id)
             await blogObj.editPost(id, title, content,published)

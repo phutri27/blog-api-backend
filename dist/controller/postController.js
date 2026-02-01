@@ -1,0 +1,47 @@
+import { matchedData, validationResult } from "express-validator";
+import { blogObj } from "../queries/queries";
+import { validateBlogPublish } from "./validator/validator";
+export const renderPosts = async (req, res) => {
+    const posts = await blogObj.findAllPost(true);
+    return res.status(200).json(posts);
+};
+export const renderMyPost = async (req, res) => {
+    if (!req.user) {
+        throw new Error("Unauthorized");
+    }
+    const posts = await blogObj.findAllPost(undefined, req.user.id);
+    return res.status(200).json(posts);
+};
+export const blogPost = [
+    ...validateBlogPublish,
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const result = errors.formatWith(error => error.msg);
+            return res.status(400).json({ errors: result.array() });
+        }
+        const { title, content } = matchedData(req);
+        const { published } = req.body;
+        if (req.method == 'PUT') {
+            const id = Number(req.params.id);
+            await blogObj.editPost(id, title, content, published);
+        }
+        else {
+            if (!req.user) {
+                return res.status(401).json({ message: "Unauthorized" });
+            }
+            await blogObj.createPost(req.user.id, title, content, published);
+        }
+        return res.status(200).json({
+            message: "Post created",
+        });
+    }
+];
+export const deletePost = async (req, res) => {
+    const id = Number(req.params.id);
+    await blogObj.deletePost(id);
+    return res.status(200).json({
+        message: "Delete post successfully"
+    });
+};
+//# sourceMappingURL=postController.js.map

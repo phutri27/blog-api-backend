@@ -1,36 +1,29 @@
-import { networkInterfaces } from "node:os"
-import { Prisma } from "../../generated/prisma/client"
-import { Role } from "../../generated/prisma/enums"
-import {prisma} from "../../lib/prisma"
-import { deletePost } from "../controller/postController"
-import { deleteComments } from "../controller/commentController"
-
-class User{
-    async createUser(email: string, password: string){
+import { Role } from "../../generated/prisma/enums";
+import { prisma } from "../../lib/prisma";
+class User {
+    async createUser(email, password) {
         await prisma.user.create({
-            data:{
+            data: {
                 email: email,
                 password: password,
                 role: Role.USER
             }
-        })
+        });
     }
-
-    async findUserById(userId: number){
+    async findUserById(userId) {
         const user = await prisma.user.findUnique({
-            where:{
+            where: {
                 id: userId
             },
-            select:{
+            select: {
                 id: true,
                 email: true,
                 role: true
             }
-        })
-        return user
+        });
+        return user;
     }
-
-    async findUserByEmail(email: string) {
+    async findUserByEmail(email) {
         const user = await prisma.user.findUnique({
             where: {
                 email: email,
@@ -40,11 +33,10 @@ class User{
                 password: true,
                 id: true,
             }
-        })
-        return user
+        });
+        return user;
     }
-
-    async findUserByEmailAdmin(email: string) {
+    async findUserByEmailAdmin(email) {
         const user = await prisma.user.findUnique({
             where: {
                 email: email,
@@ -55,52 +47,48 @@ class User{
                 password: true,
                 id: true,
             }
-        })
-        return user
+        });
+        return user;
     }
 }
-
-class Blog{
-    async createPost(userId: number, title: string, text: string, published: boolean): Promise<void>{
+class Blog {
+    async createPost(userId, title, text, published) {
         await prisma.posts.create({
-            data:{
+            data: {
                 title: title,
                 userId: userId,
                 text: text,
                 published: published,
             }
-        })
+        });
     }
-
-    async editPost(postId: number, title: string, text: string, published: boolean){
+    async editPost(postId, title, text, published) {
         await prisma.posts.update({
-            where:{
-                id:postId
+            where: {
+                id: postId
             },
-            data:{
+            data: {
                 title: title,
                 text: text,
                 published: published
             }
-        })
+        });
     }
-
-    async deletePost(postId: number){
+    async deletePost(postId) {
         await prisma.posts.delete({
-            where:{
-                id:postId
+            where: {
+                id: postId
             }
-        })
+        });
     }
-
-    async findAllPost(published?: boolean, userId?: number){
+    async findAllPost(published, userId) {
         const posts = await prisma.posts.findMany({
-            where:{
-                users:{
+            where: {
+                users: {
                     role: Role.ADMIN,
                 },
                 ...(userId !== undefined && { userId }),
-                ...(published !== undefined && {published})
+                ...(published !== undefined && { published })
             },
             orderBy: {
                 date: "desc"
@@ -111,109 +99,102 @@ class Blog{
                 text: true,
                 date: true,
                 published: true,
-                users:{
+                users: {
                     select: {
                         email: true
                     }
                 }
             }
-        })
-        return posts
+        });
+        return posts;
     }
 }
-
-class Comments{
-    async findAllComments(postId: number){
+class Comments {
+    async findAllComments(postId) {
         const comments = await prisma.comments.findMany({
-            where:{
+            where: {
                 postId: postId
             },
-            orderBy:{
+            orderBy: {
                 date: "asc"
             },
-            select:{
+            select: {
                 id: true,
                 text: true,
                 date: true,
-                user:{
-                    select:{
-                        email:true,
-                        id: true
-                    }
-                }
-            }
-        })
-        return comments
-    }
-
-    async createComments(postId: number, 
-        userId: number,
-        text: string){
-        const result = await prisma.comments.create({
-            data:{
-                postId:postId,
-                userId:userId,
-                text:text
-            },
-            select:{
-                id:true,
-                text: true,
-                date: true,
-                user:{
-                    select:{ email: true, id: true}
-                }
-            }
-        })
-        return result
-    }
-
-    async updateComments(id: number, text: string){
-        const result = await prisma.comments.update({
-            where:{
-                id: id
-            },
-            data:{
-                text:text
-            },
-            select:{
-                id: true,
-                text: true,
-                date: true,
-                user:{
+                user: {
                     select: {
                         email: true,
                         id: true
                     }
                 }
             }
-        })
-        return result
+        });
+        return comments;
     }
-
-    async deleteComments(id: number){
-        const result = await prisma.comments.delete({
-            where:{
-                id:id
+    async createComments(postId, userId, text) {
+        const result = await prisma.comments.create({
+            data: {
+                postId: postId,
+                userId: userId,
+                text: text
+            },
+            select: {
+                id: true,
+                text: true,
+                date: true,
+                user: {
+                    select: { email: true, id: true }
+                }
             }
-        })
-        return result
+        });
+        return result;
     }
-
-    async findSelfComments(id: number) {
+    async updateComments(id, text) {
+        const result = await prisma.comments.update({
+            where: {
+                id: id
+            },
+            data: {
+                text: text
+            },
+            select: {
+                id: true,
+                text: true,
+                date: true,
+                user: {
+                    select: {
+                        email: true,
+                        id: true
+                    }
+                }
+            }
+        });
+        return result;
+    }
+    async deleteComments(id) {
+        const result = await prisma.comments.delete({
+            where: {
+                id: id
+            }
+        });
+        return result;
+    }
+    async findSelfComments(id) {
         const result = await prisma.comments.findMany({
-            where:{
+            where: {
                 userId: id
             },
-            orderBy:{
+            orderBy: {
                 date: "desc"
             },
-            select:{
+            select: {
                 id: true,
                 text: true,
                 date: true,
                 postId: true,
-                user:{
-                    select:{
+                user: {
+                    select: {
                         email: true
                     }
                 },
@@ -228,12 +209,11 @@ class Comments{
                     }
                 }
             }
-        })
-        
-        return result
+        });
+        return result;
     }
 }
-
-export const blogObj = new Blog()
-export const userObj = new User()
-export const commnentObj = new Comments()
+export const blogObj = new Blog();
+export const userObj = new User();
+export const commnentObj = new Comments();
+//# sourceMappingURL=queries.js.map
