@@ -2,12 +2,10 @@
   "name": "blogapibackend",
   "version": "1.0.0",
   "main": "index.js",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "tsc": "tsc",
-    "build": "node dist/app.js" 
+    "build": "npm install && npx prisma generate && tsc",
+    "start": "node dist/app.js",
+    "dev": "tsx watch src/app.ts"
   },
   "type": "module",
   "keywords": [],
