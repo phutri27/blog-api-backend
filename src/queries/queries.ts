@@ -1,9 +1,5 @@
-import { networkInterfaces } from "node:os"
-import { Prisma } from "../../generated/prisma/client"
-import { Role } from "../../generated/prisma/enums"
-import {prisma} from "../../lib/prisma"
-import { deletePost } from "../controller/postController"
-import { deleteComments } from "../controller/commentController"
+import { Role } from "../../generated/prisma/enums.js"
+import {prisma} from "../../lib/prisma.js"
 
 class User{
     async createUser(email: string, password: string){

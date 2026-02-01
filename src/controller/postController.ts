@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { matchedData, validationResult, Result } from "express-validator";
-import { blogObj } from "../queries/queries";
-import { validateBlogPublish } from "./validator/validator";
+import { blogObj } from "../queries/queries.js";
+import { validateBlogPublish } from "./validator/validator.js";
 
 export const renderPosts = async (req: Request, res: Response) => {
     const posts = await blogObj.findAllPost(true)

@@ -1,5 +1,5 @@
 import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions} from "passport-jwt"
-import { userObj } from "../queries/queries"
+import { userObj } from "../queries/queries.js"
 import "dotenv/config"
 
 const opts: StrategyOptions = {

@@ -1,5 +1,5 @@
 import express from "express"
-import { renderMyPost, blogPost, deletePost } from "../controller/postController"
+import { renderMyPost, blogPost, deletePost } from "../controller/postController.js"
 
 const router = express.Router()
 

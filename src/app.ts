@@ -2,10 +2,10 @@ import express from "express"
 import { Request, Response, NextFunction } from "express"
 import passport from "passport"
 import "dotenv/config"
-import routes from "./routes/index"
+import routes from "./routes/index.js"
 import "dotenv/config"
-import { jwtSub } from "./utils/jwt"
-import { isLogged, isAdmin } from "./utils/isAuth"
+import { jwtSub } from "./utils/jwt.js"
+import { isLogged, isAdmin } from "./utils/isAuth.js"
 import cors from "cors"
 passport.use(jwtSub)
 

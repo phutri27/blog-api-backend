@@ -1,5 +1,5 @@
 import { Response, Request } from "express"
-import { userObj } from "../queries/queries"
+import { userObj } from "../queries/queries.js"
 import "dotenv/config"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"

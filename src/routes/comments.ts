@@ -1,5 +1,5 @@
 import express from "express"
-import { renderComments, createComments, deleteComments } from "../controller/commentController"
+import { renderComments, createComments, deleteComments } from "../controller/commentController.js"
 const router = express.Router()
 
 router.get("/:id", renderComments)

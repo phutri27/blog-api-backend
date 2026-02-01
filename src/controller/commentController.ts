@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { matchedData, validationResult, Result } from "express-validator";
-import { commnentObj } from "../queries/queries";
-import { validateComments } from "./validator/validator";
-import { prisma } from "../../lib/prisma";
+import { commnentObj } from "../queries/queries.js";
+import { validateComments } from "./validator/validator.js";
 
 export const renderComments = async (req: Request, res: Response) => {
     const id = Number(req.params.id)

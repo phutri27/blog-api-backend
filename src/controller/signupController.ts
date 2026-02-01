@@ -1,9 +1,9 @@
 import { matchedData, validationResult, Result } from "express-validator";
-import { userObj } from "../queries/queries";
+import { userObj } from "../queries/queries.js";
 import { Request, Response } from "express";
-import { createHash } from "../utils/utility";
-import { validateSignUp } from "./validator/validator";
-import { PrismaClient, Prisma } from '../../generated/prisma/client'
+import { createHash } from "../utils/utility.js";
+import { validateSignUp } from "./validator/validator.js";
+import { PrismaClient, Prisma } from '../../generated/prisma/client.js'
 
 export const signUpPost = [...validateSignUp, async (req: Request, res: Response) => {
     const errors: Result = validationResult(req)

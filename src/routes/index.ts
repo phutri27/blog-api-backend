@@ -1,10 +1,10 @@
-import login from "./login"
-import signup from "./signup"
-import home from "./home"
-import comments from "./comments"
-import posts from "./posts"
-import defaultRoute from "./default"
-import profile from "./profile"
+import login from "./login.js"
+import signup from "./signup.js"
+import home from "./home.js"
+import comments from "./comments.js"
+import posts from "./posts.js"
+import defaultRoute from "./default.js"
+import profile from "./profile.js"
 
 export default{
     login,
